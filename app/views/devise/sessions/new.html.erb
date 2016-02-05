@@ -1,0 +1,37 @@
+<body>
+  <section class="bg-cover">
+    <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: 0 auto; background: rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
+      <h1 class="ui header massive" style="font-size: 30pt;"><i>Pickup.</i></h1>
+      <span class="ui white-text" style="font-size: 14pt;"><i>Join an existing game or create a new one</i></span>
+    </div>
+    <div class="ui segment" style="opacity: 1; top: 120px; width: 600px; margin: 0 auto; background: rgba(255,255,255,1); border: 1px solid rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
+        <div class="ui form">
+            <h2>Sign In</h2>
+
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <div class="field">
+                <%= f.label :email %><br />
+                <%= f.email_field :email, autofocus: true %>
+              </div>
+
+              <div class="field">
+                <%= f.label :password %><br />
+                <%= f.password_field :password, autocomplete: "off" %>
+              </div>
+
+              <% if devise_mapping.rememberable? -%>
+                <div class="field ui checkbox">
+                  <%= f.check_box :remember_me %>
+                  <%= f.label :remember_me %>
+                </div>
+              <% end -%>
+
+              <div class="actions">
+                <%= f.submit "Log in", class: "ui button teal" %>
+                <%= render "devise/shared/links" %>
+              </div>
+            <% end %>
+
+        </div>
+    </div>
+  </section>
