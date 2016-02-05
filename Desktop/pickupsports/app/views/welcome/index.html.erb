@@ -1,0 +1,78 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pickup</title>
+  <meta name="description" content="Crum">
+  <meta name="viewport" content="width=1000px, initial-scale=0.4, maximum-scale=1, minimum-scale=0.4">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+  <link rel="stylesheet" href="/welcome.css" />
+
+</head>
+
+<body>
+
+  <!-- <% if person_signed_in? %>
+    <script>
+      window.location = "/games";
+    </script>
+  <% end %> -->
+
+  <!-- <section class="wrapper"> -->
+  <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
+
+    <i class="icon circle huge left floated inverted white" style="position: absolute; left: 10px; top: 0px;"></i>
+
+      <!-- <a href="/users/sign_up" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign Up</a> -->
+      <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
+        <% if !person_signed_in? %>
+          <a href="/people/sign_in" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign In</a>
+          <a href="/people/sign_up" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign Up</a>
+        <% else %>
+          <div class="ui dropdown basic button inverted right floated">
+            <div class="text"><i class="icon user"></i><%= current_person.email %><i class="dropdown icon"></i></div>
+            <div class="menu">
+              <%= link_to "Sign Out", destroy_person_session_path, method: :delete, :class => 'item'  %>
+              <%= link_to 'Change Password', edit_person_registration_path, :class => 'item' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+    </p>
+  </div>
+  <section class="bg-cover">
+
+      <div class="ui segment inverted" style="opacity: 1; top: 200px; width: 600px; margin: 0 auto; background: rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
+        <br /><br /><br />
+        <h1 class="ui header massive" style="font-size: 30pt;"><i>Pickup.</i></h1>
+        <span class="ui white-text" style="font-size: 14pt;"><i>Start a game or join an existing game</i></span>
+      </div>
+      <div class="ui segment inverted" style="opacity: 1; top: 250px; width: 600px; margin: 0 auto; background: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
+          <h2 class="ui header white-text">Notify Me!</h2><br />
+          <form class="ui form">
+            <div class="fields">
+              <div class="thirteen wide field ">
+          	     <input class="" type="text" placeholder="Sign up to be notified when we launch">
+              </div>
+              <div class="three wide field">
+          	     <button class="ui teal large button" type="submit">Submit</button>
+              </div>
+            </div>
+          </form>
+      </div>
+  </section>
+
+
+  <script>
+    $('.ui.dropdown')
+    .dropdown()
+    ;
+  </script>
+
+</body>
+</html>
