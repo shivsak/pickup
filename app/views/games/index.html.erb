@@ -37,7 +37,7 @@
 
   <br /><br /><br />
   <div class="container limited">
-  <h1>Games</h1>
+  <h1>All Games</h1>
   <a href="ui button">Button</a>
 
     <div class="ui text stackable menu">
@@ -124,7 +124,7 @@
                 <div class="extra content inverted" style="background:white">
                   <span class="ui left floated">
                     <% if !game.created_at.blank? %>
-                      <%= game.created_at.strftime("%d %B %Y") %>
+                      <%= game.created_at.strftime("%B %d") %>
                     <% end %>
                   </span>
                   <span class="ui right floated">

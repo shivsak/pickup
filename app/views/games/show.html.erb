@@ -1,29 +1,98 @@
-<p id="notice"><%= notice %></p>
+<head>
+  <meta charset="utf-8">
+  <title>Show Game</title>
+  <meta name="description" content="Pickup">
+  <meta name="viewport" content="width=1000px, initial-scale=0.4, maximum-scale=1, minimum-scale=0.4">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-<p>
-  <strong>Title:</strong>
-  <%= @game.title %>
-</p>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
 
-<p>
-  <strong>Date:</strong>
-  <%= @game.date %>
-</p>
+<body>
+  <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(20, 30, 70, 1)">
+      <center><img src="<%= @game.get_white_icon %>" width="100px"/></center><br>
 
-<p>
-  <strong>Venue:</strong>
-  <%= @game.venue %>
-</p>
+      <center>
+      <div class="content ui buttons">
+        <button class="ui orange button">join</button>
+        <div class="or"></div>
+        <button class="ui blue button"><%= link_to 'back', games_path, class: 'white-text' %></button>
+        <div class="or"></div>
+        <button class="ui teal button"><%= link_to 'edit', edit_game_path(@game), class: 'white-text' %></button>
+      </div>
+    </center>
+  </div>
 
-<p>
-  <strong>Type:</strong>
-  <%= @game.game_type %>
-</p>
+<section class="bg-cover" style="height: 150%">
+  <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: auto; background: rgba(0,0,0,0); padding: 0;">
+    <h1 class="ui header massive" style="font-size: 20pt; text-align: center"><i><%= @game.title %></i></h1>
+    <h2 style="font-size: 15pt; text-align: center; margin: auto"> <%= @game.game_type %> </h2>
+  </div>
 
-<p>
-  <strong>Max participants:</strong>
-  <%= @game.max_participants %>
-</p>
+  <div class="ui card"  style="opacity: 1; top: 120px; width: 600px; margin: 0 auto; background: rgba(255,255,255,1); border: 1px solid rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
+    <div class="content">
+      <h4 class="ui horizontal divider header">
+          <i class="calendar icon"></i>
+          <%= @game.date.strftime("%B %d").downcase %> |
+          <%= @game.date.strftime("%H:%M").downcase %>
+      </h4>
+    </div>
 
-<%= link_to 'Edit', edit_game_path(@game) %> |
-<%= link_to 'Back', games_path %>
+    <% if !@game.venue.blank? %>
+    <div class="content">
+      <h4 class="ui horizontal divider header green">
+          <i class="marker icon"></i>
+          <%= @game.venue.downcase %>
+      </h4>
+      <center>
+        <iframe style="margin:0 auto; background:none; box-shadow:none; width: 100%; height: 100%; border-radius: 5px; padding: 0px; border: none;"
+        src="https://www.google.com/maps/embed/v1/place?q=<%=u @game.venue %>
+          &zoom=17
+          &key=AIzaSyDu9jdCmLG8bGpHEKVviraQ0qPoe1PN0f4">
+        </iframe>
+      </center>
+    </div>
+    <% end %>
+
+    <% if !@game.max_participants.blank? %>
+    <div class="content">
+      <h4 class="ui horizontal divider header">
+          <i class="users outline icon"></i>
+          4/<%= @game.max_participants %> playing
+      </h4>
+    </div>
+    <% end %>
+
+    <% if !@game.max_participants.blank? %>
+    <div class="content">
+      <h4 class="ui horizontal divider header">
+          <i class="info circle icon"></i>
+          more info
+      </h4>
+      <p style="text-align:center"> bring 2 balls, 2 nets. meet on 113th side of park </p>
+    </div>
+    <% end %>
+
+    <% if !@game.max_participants.blank? %>
+    <div class="content">
+      <h4 class="ui horizontal divider header">
+          <i class="comment icon"></i>
+          3 comments
+      </h4>
+    </div>
+    <% end %>
+
+    <div class="content">
+      <div class="ui transparent inverted icon input">
+        <input type="text" placeholder="Add Comment...">
+      </div>
+    </div>
+  </div>
+  <br /><br /><br />
+</div>
+
+  <p id="notice"><%= notice %></p>
+</section>
+</body>
