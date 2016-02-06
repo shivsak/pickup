@@ -1,5 +1,6 @@
 class Game < ActiveRecord::Base
-  has_many :people
+  has_many :gamepeople
+  has_many :people, through: :gamepeople
 
   def format_time
     self.date.strftime("%B, %Y")
@@ -32,7 +33,7 @@ class Game < ActiveRecord::Base
   end
 
   def get_white_icon
-    
+
       if self.game_type.downcase == 'football'
         '/images/white_icons/football.png'
       elsif self.game_type.downcase == 'soccer'
@@ -56,8 +57,28 @@ class Game < ActiveRecord::Base
       else
 
       end
+  end
 
+  def get_participants
+    self.people
+  end
 
+  def is_in_game
+    in_game = false
+    self.people.each do |person|
+      if person.email == 'abc'
+        in_game = true
+      end
+    end
+    in_game
+  end
+
+  def get_description
+    if self.description.blank?
+      "No description available"
+    else
+      self.description
+    end
   end
 
 end

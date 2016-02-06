@@ -12,6 +12,29 @@
 
 </head>
 <body>
+  <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
+
+    <i class="icon circle huge left floated inverted white" style="position: absolute; left: 10px; top: 0px;"></i>
+
+      <!-- <a href="/users/sign_up" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign Up</a> -->
+      <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
+        <% if !person_signed_in? %>
+          <a href="/people/sign_in" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign In</a>
+          <a href="/people/sign_up" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign Up</a>
+        <% else %>
+          <div class="ui dropdown basic button inverted right floated">
+            <div class="text"><i class="icon user"></i><%= current_person.email %><i class="dropdown icon"></i></div>
+            <div class="menu">
+              <%= link_to "Sign Out", destroy_person_session_path, method: :delete, :class => 'item'  %>
+              <%= link_to 'Change Password', edit_person_registration_path, :class => 'item' %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+    </p>
+  </div>
+
   <br /><br /><br />
   <div class="container limited">
   <h1>Games</h1>
@@ -21,8 +44,15 @@
           <div class="ui basic <% if !params[:sort].blank? %> blue <% else %>  <% end %> button simple dropdown right floated">
             <div class="text">Sort By<i class="dropdown icon"></i></div><br />
             <div class="menu">
-              <%= link_to 'Price: Low', request.parameters.merge({:sort => 'price_lth'}), class:
-              if params['sort'] == 'price_lth' then
+              <%= link_to 'Distance', request.parameters.merge({:sort => 'distance'}), class:
+              if params['sort'] == 'distance' then
+                'active item'
+              else
+                'item'
+              end %>
+
+              <%= link_to 'Recent', request.parameters.merge({:sort => 'recent'}), class:
+              if params['sort'] == 'recent' then
                 'active item'
               else
                 'item'
@@ -33,26 +63,6 @@
           &nbsp;
 
 
-          <div class="ui basic <% if !params[:low_price].blank? || !params[:high_price].blank? %> blue <% else %> <% end %> button simple dropdown left floated">
-            <div class="text"><i class="money icon"></i>
-              <% if !params[:low_price].blank? && !params[:high_price].blank? %>
-                $<%= params[:low_price] %> - $<%= params[:high_price] %>
-              <% elsif !params[:low_price].blank? && params[:high_price].blank? %>
-                Above $<%= params[:low_price] %>
-              <% elsif !params[:high_price].blank? && params[:low_price].blank? %>
-                Below $<%= params[:high_price] %>
-              <% else %>
-                Price
-              <% end %>
-
-            <i class="dropdown icon"></i></div><br />
-            <div class="menu">
-              <%= link_to '$60 to $80', request.parameters.merge({:low_price => '60', :high_price => '80'}), class:'item' %>
-              <%= link_to request.parameters.merge({:low_price => '', :high_price => ''}), class:'item' do %>
-                <i class="icon delete"></i>Clear
-              <% end %>
-            </div>
-          </div>
 
 
         <div class="right menu">
@@ -80,39 +90,44 @@
         </div>
       </div>
       <br /><br />
-      <center><%= link_to 'New Game', new_game_path, class: "ui button green" %></center>
+      <center>
+        <%= link_to new_game_path, class: "ui button green" do %>
+          <i class="add icon"></i> New Game
+        <% end %>
+      </center>
       <br /><br />
 
       <!-- Cards -->
-        <div class="ui four stackable link cards">
+        <div class="ui three stackable link cards">
           <% @games.each do |game| %>
             <!-- One card per game -->
-            <%= link_to game do %>
               <div class="ui card">
                 <!-- Content -->
-                <div class="image-bg-<%=(game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(20, 30, 70, 1)">
+                <div class="image-bg-<%=(game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(40, 50, 70, 1)">
                     <center><img src="<%= game.get_white_icon %>" width="100px"/></center>
                 </div>
                 <div class="content">
-                  <div class="header">
-                      <%= game.title %>
-                  </div>
+                  <%= link_to game do %>
+                    <div class="header">
+                        <h3 style="color:black"><%= game.title %></h3>
+                    </div>
+                  <% end %>
                   <div class="meta">
-                    <%= game.game_type %>
+                    <%= game.game_type.titleize %>
                   </div>
                   <div class="description">
-                    Hello, this is Shiv
+                    <%= game.get_description %>
                   </div>
                 </div>
 
                 <!-- Extra Content -->
                 <div class="extra content inverted" style="background:white">
-                  <span class="right floated">
-                    <% if !game.updated_at.blank? %>
-                      <%= game.updated_at.strftime("%d %B %Y") %>
+                  <span class="ui left floated">
+                    <% if !game.created_at.blank? %>
+                      <%= game.created_at.strftime("%d %B %Y") %>
                     <% end %>
                   </span>
-                  <span class="color: #66CC00">
+                  <span class="ui right floated">
                     <div class="ui button green mini">
                       <i class="pin icon"></i>
                       <% if !game.venue.blank? %>
@@ -125,17 +140,27 @@
                 <!-- Extra Content -->
                 <% if !game.max_participants.blank? %>
                   <div class="extra content">
-                    <span>
+                    <span class="ui left floated ">
                         <i class="users icon"></i>
-                          <span>1/<%= game.max_participants %> Participants</span>
+                          <span>
+                            <%= game.max_participants.to_i - game.get_participants.count %> Spots Left
+                          </span>
                     </span>
+                    <% if game.get_participants.count < game.max_participants %>
+                      <span class="ui right floated">
+                        <% if !game.is_in_game %>
+                          <%= link_to add_person_game_path(game.id, personid: current_person.id), method: :post, class: 'ui button teal mini' do %>
+                              <i class="add icon"></i> Join Game
+                          <% end %>
+                        <% end %>
+                      </span>
+                    <% end %>
                   </div>
                 <% end %>
 
               </div>
 
             <!-- End Loop-->
-            <% end %>
 
           <% end %>
         </div>

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :games
   devise_for :people
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -7,6 +6,13 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
+
+  resources :games do
+    member do
+      post 'add_person'
+    end
+  end
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

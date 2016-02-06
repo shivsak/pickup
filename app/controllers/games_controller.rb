@@ -61,6 +61,14 @@ class GamesController < ApplicationController
     end
   end
 
+  def add_person
+    game = Game.find(params[:id])
+    game_person_relation = Gameperson.where(person_id: params['personid'], game: game.id)
+    game.gamepeople.create(person_id: params['personid']);
+    # render nothing: true
+    redirect_to :back
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
@@ -69,6 +77,6 @@ class GamesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
-      params.require(:game).permit(:title, :date, :venue, :type, :max_participants)
+      params.require(:game).permit(:title, :date, :venue, :description,:game_type, :max_participants)
     end
 end
