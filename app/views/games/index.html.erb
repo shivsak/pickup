@@ -149,8 +149,10 @@
                     <% if game.get_participants.count < game.max_participants %>
                       <span class="ui right floated">
                         <% if !game.is_in_game %>
-                          <%= link_to add_person_game_path(game.id, personid: current_person.id), method: :post, class: 'ui button teal mini' do %>
-                              <i class="add icon"></i> Join Game
+                          <% if game.blank? %>
+                            <%= link_to add_person_game_path(game.id, personid: current_person.id), method: :post, class: 'ui button teal mini' do %>
+                                <i class="add icon"></i> Join Game
+                            <% end %>
                           <% end %>
                         <% end %>
                       </span>
