@@ -12,26 +12,32 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :title %><br>
+    <%= f.label :title %>
     <%= f.text_field :title %>
   </div>
-  <div class="field">
-    <%= f.label :date %><br>
+  <%= f.label :date %>
+  <div class="fields">
     <%= f.datetime_select :date %>
   </div>
+  <br />
   <div class="field">
-    <%= f.label :venue %><br>
+    <%= f.label :venue %>
     <%= f.text_field :venue %>
   </div>
   <div class="field">
-    <%= f.label :type %><br>
-    <%= f.text_field :type %>
+    <%= f.label :game_type %>
+    <%= f.text_field :game_type %>
   </div>
   <div class="field">
-    <%= f.label :max_participants %><br>
+    <%= f.label :max_participants %>
     <%= f.number_field :max_participants %>
   </div>
+  <div class="ui info message">
+    <a href="#" class="ui basic button"><i class="icon facebook"></i>Invite Friends</a>
+  </div>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "Create Game", class: "ui button teal" %>
+    <%= link_to 'Back', games_path %>
   </div>
 <% end %>

@@ -12,37 +12,165 @@
 
 </head>
 <body>
-  <div class="main-container">
+  <br /><br /><br />
+  <div class="container limited">
   <h1>Games</h1>
   <a href="ui button">Button</a>
-  <!--
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Date</th>
-        <th>Venue</th>
-        <th>Type</th>
-        <th>Max participants</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <% @games.each do |game| %>
-        <tr>
-          <td><%= game.title %></td>
-          <td><%= game.date %></td>
-          <td><%= game.venue %></td>
-          <td><%= game.type %></td>
-          <td><%= game.max_participants %></td>
-          <td><%= link_to 'Show', game %></td>
-          <td><%= link_to 'Edit', edit_game_path(game) %></td>
-          <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table> -->
+    <div class="ui text stackable menu">
+          <div class="ui basic <% if !params[:sort].blank? %> blue <% else %>  <% end %> button simple dropdown right floated">
+            <div class="text">Sort By<i class="dropdown icon"></i></div><br />
+            <div class="menu">
+              <%= link_to 'Price: Low', request.parameters.merge({:sort => 'price_lth'}), class:
+              if params['sort'] == 'price_lth' then
+                'active item'
+              else
+                'item'
+              end %>
+              <%= link_to 'Price: High', request.parameters.merge({:sort => 'price_htl'}), class:
+              if params['sort'] == 'price_htl' then
+                'active item'
+              else
+                'item'
+              end %>
+              <%= link_to 'Condition', request.parameters.merge({:sort => 'condition'}), class:
+              if params['sort'] == 'condition' then
+                'active item'
+              else
+                'item'
+              end %>
+              <%= link_to 'Recent', request.parameters.merge({:sort => 'recent'}), class:
+              if params['sort'] == 'recent' then
+                'active item'
+              else
+                'item'
+              end %>
+              <%= link_to request.parameters.merge({:sort => ''}), class:'item' do %>
+                <i class="icon delete"></i>Clear
+              <% end %>
+            </div>
+          </div>
+          &nbsp;
+
+          <div class="ui basic <% if !params[:category].blank? %> blue <% else %>  <% end %> button simple dropdown left floated">
+            <div class="text"><i class="cube icon"></i>
+              <% if !params[:category].blank? %>
+                <%= params[:category].titleize %>
+              <% else %>
+                Type
+              <% end %>
+            <i class="dropdown icon"></i></div><br />
+            <div class="menu">
+              <%= link_to 'Books', request.parameters.merge({:category => 'books'}), class:'item' %>
+              <%= link_to 'Electronics', request.parameters.merge({:category => 'electronics'}), class:'item' %>
+              <%= link_to 'Clothes', request.parameters.merge({:category => 'clothes'}), class:'item' %>
+              <%= link_to 'Home & Furniture', request.parameters.merge({:category => 'Home & Furniture'}), class:'item' %>
+              <!-- <%= link_to 'Roommates', request.parameters.merge({:category => 'roommates'}), class:'item' %> -->
+              <%= link_to 'School Supplies', request.parameters.merge({:category => 'school supplies'}), class:'item' %>
+              <!-- <%= link_to 'Ride Sharing', request.parameters.merge({:category => 'ride sharing'}), class:'item' %> -->
+              <%= link_to 'Miscellaneous', request.parameters.merge({:category => 'miscellaneous'}), class:'item' %>
+              <%= link_to request.parameters.merge({:category => ''}), class:'item' do %>
+                <i class="icon delete"></i>Clear
+              <% end %>
+            </div>
+          </div>
+          &nbsp;
+
+          <div class="ui basic <% if !params[:low_price].blank? || !params[:high_price].blank? %> blue <% else %> <% end %> button simple dropdown left floated">
+            <div class="text"><i class="money icon"></i>
+              <% if !params[:low_price].blank? && !params[:high_price].blank? %>
+                $<%= params[:low_price] %> - $<%= params[:high_price] %>
+              <% elsif !params[:low_price].blank? && params[:high_price].blank? %>
+                Above $<%= params[:low_price] %>
+              <% elsif !params[:high_price].blank? && params[:low_price].blank? %>
+                Below $<%= params[:high_price] %>
+              <% else %>
+                Price
+              <% end %>
+
+            <i class="dropdown icon"></i></div><br />
+            <div class="menu">
+              <%= link_to '$60 to $80', request.parameters.merge({:low_price => '60', :high_price => '80'}), class:'item' %>
+              <%= link_to request.parameters.merge({:low_price => '', :high_price => ''}), class:'item' do %>
+                <i class="icon delete"></i>Clear
+              <% end %>
+            </div>
+          </div>
+
+
+        <div class="right menu">
+          <div class="item">
+            <%= link_to request.parameters.merge({:list_type => 'list'}), class:'item' do %>
+              <i class="icon list layout large <% if params[:list_type] != "list" %>grey<% else %> black<% end %>"></i>
+            <% end %>
+            <%= link_to request.parameters.merge({:list_type => 'card'}), class:'item' do %>
+              <i class="icon block layout large <% if params[:list_type] != "card" %>grey<% else %> black<% end %>"></i>
+            <% end %>
+          </div>
+          <div class="item">
+            <div class="ui icon input">
+              <form>
+                <input type="text" name="query" placeholder="Search"></input>
+                <input type="text" name="low_price" value="<%= params[:low_price] %>" hidden="true"></input>
+                <input type="text" name="high_price" value="<%= params[:high_price] %>" hidden="true"></input>
+                <input type="text" name="sort" value="<%= params[:sort] %>" hidden="true"></input>
+                <input type="text" name="category" value="<%= params[:category] %>" hidden="true"></input>
+                <i class="icon search"></i>
+                <input type="submit" hidden="true">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br /><br />
+
+      <!-- Cards -->
+        <div class="ui four stackable link cards">
+          <% @games.each do |game| %>
+            <!-- One card per game -->
+            <%= link_to game do %>
+              <div class="card">
+                <!-- Image -->
+                <div class="image">
+
+                </div>
+                <!-- Content -->
+                <div class="content">
+                  <div class="header">
+                      <%= game.title %>
+                  </div>
+                  <div class="meta">
+                    <%= game.game_type %>
+                  </div>
+                  <div class="description">
+
+                  </div>
+                </div>
+
+                <!-- Extra Content -->
+
+                <div class="extra content">
+                  <span class="right floated">
+                    <% if !game.updated_at.blank? %>
+                      <%= game.updated_at.strftime("%d %B %Y") %>
+                    <% end %>
+                  </span>
+                  <span style="color:#66cc00">
+                    <i class="pin icon"></i>
+                    <% if !game.venue.blank? %>
+                      <%= game.venue %>
+                    <% end %>
+                  </span>
+                </div>
+              </div>
+
+            <!-- End Loop-->
+            <% end %>
+
+          <% end %>
+        </div>
+    </div>
+
   </div>
 
 
