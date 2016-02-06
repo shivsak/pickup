@@ -113,7 +113,7 @@
 
  #navbar {
  	margin: 0px auto;
- 	background: none;
+ 	background: nopine;
  	position: absolute;
  	top: 0px;
  	width: 100%;
@@ -1111,19 +1111,6 @@
    padding: 20px;
  }
 
- .card {
-   color: white !important;
-   background: rgba(0,0,0,0.7) !important;
-   opacity: 0.5;
- }
-
- .selected-course {
-   opacity: 1;
- }
-
- .card:hover {
-   opacity: 1;
- }
 
  .card-1 {
    background: rgba(205, 100, 55, 0.8) !important;

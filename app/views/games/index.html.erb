@@ -27,54 +27,11 @@
               else
                 'item'
               end %>
-              <%= link_to 'Price: High', request.parameters.merge({:sort => 'price_htl'}), class:
-              if params['sort'] == 'price_htl' then
-                'active item'
-              else
-                'item'
-              end %>
-              <%= link_to 'Condition', request.parameters.merge({:sort => 'condition'}), class:
-              if params['sort'] == 'condition' then
-                'active item'
-              else
-                'item'
-              end %>
-              <%= link_to 'Recent', request.parameters.merge({:sort => 'recent'}), class:
-              if params['sort'] == 'recent' then
-                'active item'
-              else
-                'item'
-              end %>
-              <%= link_to request.parameters.merge({:sort => ''}), class:'item' do %>
-                <i class="icon delete"></i>Clear
-              <% end %>
+
             </div>
           </div>
           &nbsp;
 
-          <div class="ui basic <% if !params[:category].blank? %> blue <% else %>  <% end %> button simple dropdown left floated">
-            <div class="text"><i class="cube icon"></i>
-              <% if !params[:category].blank? %>
-                <%= params[:category].titleize %>
-              <% else %>
-                Type
-              <% end %>
-            <i class="dropdown icon"></i></div><br />
-            <div class="menu">
-              <%= link_to 'Books', request.parameters.merge({:category => 'books'}), class:'item' %>
-              <%= link_to 'Electronics', request.parameters.merge({:category => 'electronics'}), class:'item' %>
-              <%= link_to 'Clothes', request.parameters.merge({:category => 'clothes'}), class:'item' %>
-              <%= link_to 'Home & Furniture', request.parameters.merge({:category => 'Home & Furniture'}), class:'item' %>
-              <!-- <%= link_to 'Roommates', request.parameters.merge({:category => 'roommates'}), class:'item' %> -->
-              <%= link_to 'School Supplies', request.parameters.merge({:category => 'school supplies'}), class:'item' %>
-              <!-- <%= link_to 'Ride Sharing', request.parameters.merge({:category => 'ride sharing'}), class:'item' %> -->
-              <%= link_to 'Miscellaneous', request.parameters.merge({:category => 'miscellaneous'}), class:'item' %>
-              <%= link_to request.parameters.merge({:category => ''}), class:'item' do %>
-                <i class="icon delete"></i>Clear
-              <% end %>
-            </div>
-          </div>
-          &nbsp;
 
           <div class="ui basic <% if !params[:low_price].blank? || !params[:high_price].blank? %> blue <% else %> <% end %> button simple dropdown left floated">
             <div class="text"><i class="money icon"></i>
@@ -123,18 +80,19 @@
         </div>
       </div>
       <br /><br />
+      <center><%= link_to 'New Game', new_game_path, class: "ui button green" %></center>
+      <br /><br />
 
       <!-- Cards -->
         <div class="ui four stackable link cards">
           <% @games.each do |game| %>
             <!-- One card per game -->
             <%= link_to game do %>
-              <div class="card">
-                <!-- Image -->
-                <div class="image">
-
-                </div>
+              <div class="ui card">
                 <!-- Content -->
+                <div class="image-bg-<%=(game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(20, 30, 70, 1)">
+                    <center><img src="<%= game.get_white_icon %>" width="100px"/></center>
+                </div>
                 <div class="content">
                   <div class="header">
                       <%= game.title %>
@@ -143,25 +101,37 @@
                     <%= game.game_type %>
                   </div>
                   <div class="description">
-
+                    Hello, this is Shiv
                   </div>
                 </div>
 
                 <!-- Extra Content -->
-
-                <div class="extra content">
+                <div class="extra content inverted" style="background:white">
                   <span class="right floated">
                     <% if !game.updated_at.blank? %>
                       <%= game.updated_at.strftime("%d %B %Y") %>
                     <% end %>
                   </span>
-                  <span style="color:#66cc00">
-                    <i class="pin icon"></i>
-                    <% if !game.venue.blank? %>
-                      <%= game.venue %>
-                    <% end %>
+                  <span class="color: #66CC00">
+                    <div class="ui button green mini">
+                      <i class="pin icon"></i>
+                      <% if !game.venue.blank? %>
+                        <%= game.venue %>
+                      <% end %>
+                    </div>
                   </span>
                 </div>
+
+                <!-- Extra Content -->
+                <% if !game.max_participants.blank? %>
+                  <div class="extra content">
+                    <span>
+                        <i class="users icon"></i>
+                          <span>1/<%= game.max_participants %> Participants</span>
+                    </span>
+                  </div>
+                <% end %>
+
               </div>
 
             <!-- End Loop-->
@@ -176,5 +146,4 @@
 
   <br>
 </body>
-<%= link_to 'New Game', new_game_path %>
 </html>
