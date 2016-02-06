@@ -12,9 +12,10 @@
 
 </head>
 <body>
-  <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
+<section class="bg-cover" style="color:white; height: 150%;">
+  <div id="navbar" style="background:rgba(250,200,100,0); padding: 10px;">
 
-    <i class="icon circle huge left floated inverted white" style="position: absolute; left: 10px; top: 0px;"></i>
+    <h1 class="header" style="font-size:30pt;"><i class="angle double up icon"></i>PlayUp </h1>
 
       <!-- <a href="/users/sign_up" class="ui basic button inverted right floated" style="margin-right: 15px;">Sign Up</a> -->
       <div id="navbar" style="background:rgba(20,20,20,0); padding: 10px;">
@@ -37,12 +38,13 @@
 
   <br /><br /><br />
   <div class="container limited">
-  <h1>All Games</h1>
-  <a href="ui button">Button</a>
+    <center>
+  <h2>All Games</h2>
+</center>
 
     <div class="ui text stackable menu">
-          <div class="ui basic <% if !params[:sort].blank? %> blue <% else %>  <% end %> button simple dropdown right floated">
-            <div class="text">Sort By<i class="dropdown icon"></i></div><br />
+          <div class="ui basic inverted white<% if !params[:sort].blank? %> blue <% else %>  <% end %> button simple dropdown">
+            <div class="white-text">Sort By<i class="dropdown icon"></i></div>
             <div class="menu">
               <%= link_to 'Distance', request.parameters.merge({:sort => 'distance'}), class:
               if params['sort'] == 'distance' then
@@ -66,14 +68,7 @@
 
 
         <div class="right menu">
-          <div class="item">
-            <%= link_to request.parameters.merge({:list_type => 'list'}), class:'item' do %>
-              <i class="icon list layout large <% if params[:list_type] != "list" %>grey<% else %> black<% end %>"></i>
-            <% end %>
-            <%= link_to request.parameters.merge({:list_type => 'card'}), class:'item' do %>
-              <i class="icon block layout large <% if params[:list_type] != "card" %>grey<% else %> black<% end %>"></i>
-            <% end %>
-          </div>
+
           <div class="item">
             <div class="ui icon input">
               <form>
@@ -82,7 +77,8 @@
                 <input type="text" name="high_price" value="<%= params[:high_price] %>" hidden="true"></input>
                 <input type="text" name="sort" value="<%= params[:sort] %>" hidden="true"></input>
                 <input type="text" name="category" value="<%= params[:category] %>" hidden="true"></input>
-                <i class="icon search"></i>
+                &nbsp;
+                <i class="icon search inverted"></i>
                 <input type="submit" hidden="true">
               </form>
             </div>
@@ -91,8 +87,8 @@
       </div>
       <br /><br />
       <center>
-        <%= link_to new_game_path, class: "ui button green" do %>
-          <i class="add icon"></i> New Game
+        <%= link_to new_game_path, class: "ui button teal large" do %>
+          <i class="add icon"></i> Start a game
         <% end %>
       </center>
       <br /><br />
@@ -101,7 +97,8 @@
         <div class="ui three stackable link cards">
           <% @games.each do |game| %>
             <!-- One card per game -->
-              <div class="ui card">
+            <a href="/games/<%= game.id %>">
+              <div class="ui card" style="box-shadow: none;">
                 <!-- Content -->
                 <div class="image-bg-<%=(game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(40, 50, 70, 1)">
                     <center><img src="<%= game.get_white_icon %>" width="100px"/></center>
@@ -116,20 +113,20 @@
                     <%= game.game_type.titleize %>
                   </div>
                   <div class="description">
-                    <%= game.get_description %>
+                    <p><%= game.get_description %></p>
                   </div>
                 </div>
 
                 <!-- Extra Content -->
                 <div class="extra content inverted" style="background:white">
                   <span class="ui left floated">
-                    <% if !game.created_at.blank? %>
-                      <%= game.created_at.strftime("%B %d") %>
+                    <% if !game.date.blank? %>
+                      <%= game.date.strftime("%B %-d") %>
                     <% end %>
                   </span>
                   <span class="ui right floated">
                     <div class="ui button green mini">
-                      <i class="pin icon"></i>
+                      <i class="marker icon"></i>
                       <% if !game.venue.blank? %>
                         <%= game.venue %>
                       <% end %>
@@ -161,6 +158,7 @@
                 <% end %>
 
               </div>
+            </a>
 
             <!-- End Loop-->
 
@@ -169,8 +167,7 @@
     </div>
 
   </div>
-
-
   <br>
+</section>
 </body>
 </html>

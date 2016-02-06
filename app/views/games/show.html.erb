@@ -12,11 +12,29 @@
 
 <body>
   <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(20, 30, 70, 1)">
-      <center><img src="<%= @game.get_white_icon %>" width="100px"/></center><br>
+      <center><img src="<%= @game.get_white_icon %>" width="100px"/></center><br><br>
 
       <center>
       <div class="content ui buttons">
-        <button class="ui orange button">join</button>
+
+        <% if person_signed_in? %>
+          <% in_game = false %>
+          <% @game.people.each do |person| %>
+            <% if person.email == current_person.email %>
+              <% in_game = true %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if !in_game %>
+          <%= link_to add_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button orange mini' do %>
+              <i class="add icon"></i> join
+          <% end %>
+        <% else %>
+          <%= link_to add_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button red mini' do %>
+              <i class="remove icon"></i> leave
+          <% end %>
+        <% end %>
         <div class="or"></div>
         <button class="ui blue button"><%= link_to 'back', games_path, class: 'white-text' %></button>
         <div class="or"></div>
@@ -25,26 +43,31 @@
     </center>
   </div>
 
-<section class="bg-cover" style="height: 150%">
-  <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: auto; background: rgba(0,0,0,0); padding: 0;">
-    <h1 class="ui header massive" style="font-size: 20pt; text-align: center"><i><%= @game.title %></i></h1>
-    <h2 style="font-size: 15pt; text-align: center; margin: auto"> <%= @game.game_type %> </h2>
+<section class="bg-cover" style="height: 175%">
+  <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: auto; background: rgba(0,0,0,0); padding: none;">
+    <h1 class="ui header massive" style="font-size: 25pt; text-align: center; padding-top: none"><i><%= @game.title %></i></h1>
+    <h2 style="font-size: 15pt; text-align: center; margin: auto"> <%= @game.game_type.titleize %> </h2>
   </div>
 
   <div class="ui card"  style="opacity: 1; top: 120px; width: 600px; margin: 0 auto; background: rgba(255,255,255,1); border: 1px solid rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
-    <div class="content">
-      <h4 class="ui horizontal divider header">
+    <div class="content" style="display:inline-block;">
+      <h3 class="ui horizontal divider header" style="display:inline-block; padding-bottom:5px;">
+        <center>
           <i class="calendar icon"></i>
-          <%= @game.date.strftime("%B %d").downcase %> |
-          <%= @game.date.strftime("%H:%M").downcase %>
-      </h4>
+          <%= @game.date.strftime("%A %b %e").titleize %> |
+          <%= @game.date.strftime("%l:%M %P") %>
+        </center>
+      </h3>
+
+      <h5 style="float:right; display:inline-block;"><i class="cloud icon" id="weather-icon"></i>
+        <span id="weather"> no forecast yet</span></h5>
     </div>
 
     <% if !@game.venue.blank? %>
     <div class="content">
       <h4 class="ui horizontal divider header green">
           <i class="marker icon"></i>
-          <%= @game.venue.downcase %>
+          <%= @game.venue.titleize %>
       </h4>
       <center>
         <iframe style="margin:0 auto; background:none; box-shadow:none; width: 100%; height: 100%; border-radius: 5px; padding: 0px; border: none;"
@@ -60,8 +83,16 @@
     <div class="content">
       <h4 class="ui horizontal divider header">
           <i class="users outline icon"></i>
-          4/<%= @game.max_participants %> playing
+          <%= @game.get_participants.count %>/<%= @game.max_participants %> playing
       </h4>
+      <center>
+        <% @game.get_participants.each do |person| %>
+          <a class="ui image label" style="margin: 10px 4px;">
+            <i class="user icon"></i>
+            <%= person.name %>
+          </a>
+        <% end %>
+      </center>
     </div>
     <% end %>
 
@@ -71,7 +102,7 @@
           <i class="info circle icon"></i>
           more info
       </h4>
-      <p style="text-align:center"> bring 2 balls, 2 nets. meet on 113th side of park </p>
+      <span><center> bring 2 balls, 2 nets. meet on 113th side of park </center></span>
     </div>
     <% end %>
 
@@ -79,14 +110,45 @@
     <div class="content">
       <h4 class="ui horizontal divider header">
           <i class="comment icon"></i>
-          3 comments
+          2 comments
       </h4>
+      <div class="ui feed">
+        <div class="event" style="margin: 5px;">
+          <div class="ui circular button teal tiny">
+            <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+          </div> &nbsp; &nbsp; &nbsp;
+          <div class="content">
+            <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
+            <span class="date">
+              1 day ago
+            </span>
+            <div class="summary" style="font-weight: 300;">
+               I'd be happy to bring a soccer ball!
+            </div>
+          </div>
+        </div>
+
+        <div class="event" style="margin: 5px;">
+          <div class="ui circular button teal tiny">
+            <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+          </div> &nbsp; &nbsp; &nbsp;
+          <div class="content">
+            <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
+            <span class="date">
+              3 days ago
+            </span>
+            <div class="summary" style="font-weight: 300;">
+               Might be running a little late, but I have a net.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <% end %>
 
     <div class="content">
-      <div class="ui transparent inverted icon input">
-        <input type="text" placeholder="Add Comment...">
+      <div class="ui transparent icon input">
+        <input type="text" placeholder="Leave a comment here...">
       </div>
     </div>
   </div>
@@ -96,3 +158,44 @@
   <p id="notice"><%= notice %></p>
 </section>
 </body>
+
+<%if @game.date.strftime("%-m").to_i == Time.now.strftime("%-m").to_i %>
+  <% if @game.date.strftime("%e").to_i <= Time.now.strftime("%e").to_i + 4 %>
+    <script>
+      var callbackFunction = function(data) {
+        var forecasts = data.query.results.channel.item.forecast;
+        var diff = 0;
+        diff = <%= (@game.date.strftime("%e").to_i) - (Time.now.strftime("%e").to_i) %>;
+
+        <%if @game.date.strftime("%P") == "pm" %>
+        document.getElementById("weather").innerHTML = forecasts[diff].text + " / " + forecasts[diff].high + "&deg;";
+        <% end %>
+
+        <%if @game.date.strftime("%P") == "am" %>
+        document.getElementById("weather").innerHTML = forecasts[diff].text + " / " + forecasts[diff].low + "&deg;";
+        <% end %>
+
+        if(forecasts[diff].text.toLowerCase().indexOf("sun") != -1) {
+          document.getElementById("weather-icon").className = "sun icon";
+        }
+
+        if(forecasts[diff].text.toLowerCase().indexOf("cloud") != -1) {
+          document.getElementById("weather-icon").className = "cloud icon";
+        }
+
+        if(forecasts[diff].text.toLowerCase().indexOf("rain") != -1) {
+          document.getElementById("weather-icon").className = "rain icon";
+        }
+
+        if(forecasts[diff].text.toLowerCase().indexOf("storm") != -1) {
+          document.getElementById("weather-icon").className = "lightning icon";
+        }
+
+        if(forecasts[diff].text.toLowerCase().indexOf("snow") != -1) {
+          document.getElementById("weather-icon").className = "bullseye icon";
+        }
+      };
+    </script>
+    <script src="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D%0912761358&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=callbackFunction"></script>
+  <% end %>
+<% end %>

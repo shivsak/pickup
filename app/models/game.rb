@@ -65,12 +65,6 @@ class Game < ActiveRecord::Base
 
   def is_in_game
     in_game = false
-    self.people.each do |person|
-      if person.email == 'abc'
-        in_game = true
-      end
-    end
-    in_game
   end
 
   def get_description
