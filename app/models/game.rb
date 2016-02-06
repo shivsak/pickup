@@ -28,7 +28,7 @@ class Game < ActiveRecord::Base
     elsif self.game_type.downcase == 'cycle'
       '/images/black_icons/cycle.png'
     else
-      '/images/black_icons/soccer.png'
+      '/images/black_icons/man271.png'
     end
   end
 

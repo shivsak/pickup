@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(20, 30, 70, 1)">
+  <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; padding-bottom: none; margin: 0 auto; background: rgba(20, 30, 70, 1)">
       <center><img src="<%= @game.get_white_icon %>" width="100px"/></center><br><br>
 
       <center>
@@ -26,6 +26,10 @@
           <% end %>
         <% end %>
 
+        <button class="ui blue button">
+          <i class="arrow left icon"></i>
+          <%= link_to 'back', games_path, class: 'white-text' %></button>
+        <div class="or" data-text=""></div>
         <% if !in_game %>
           <%= link_to add_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button orange mini' do %>
               <i class="add icon"></i> join
@@ -35,18 +39,18 @@
               <i class="remove icon"></i> leave
           <% end %>
         <% end %>
-        <div class="or"></div>
-        <button class="ui blue button"><%= link_to 'back', games_path, class: 'white-text' %></button>
-        <div class="or"></div>
-        <button class="ui teal button"><%= link_to 'edit', edit_game_path(@game), class: 'white-text' %></button>
+        <div class="or" data-text=""></div>
+        <button class="ui teal button">
+          <i class="write icon"></i>
+          <%= link_to 'edit', edit_game_path(@game), class: 'white-text' %></button>
       </div>
     </center>
   </div>
 
-<section class="bg-cover" style="height: 175%">
-  <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: auto; background: rgba(0,0,0,0); padding: none;">
-    <h1 class="ui header massive" style="font-size: 25pt; text-align: center; padding-top: none"><i><%= @game.title %></i></h1>
-    <h2 style="font-size: 15pt; text-align: center; margin: auto"> <%= @game.game_type.titleize %> </h2>
+<section class="bg-cover" style="height: 200%; padding: none; margin: 0 auto">
+  <div class="ui segment inverted" style="opacity: 1; top: 70px; width: 600px; margin: 0 auto; background: rgba(0,0,0,0); padding: none;">
+    <h1 class="ui header massive" style="font-size: 25pt; text-align: center; padding-top: none"><i><%= @game.title.titleize %></i></h1>
+    <h2 style="font-size: 15pt; text-align: center; margin: auto; padding-top:none"> <%= @game.game_type.titleize %> </h2>
   </div>
 
   <div class="ui card"  style="opacity: 1; top: 120px; width: 600px; margin: 0 auto; background: rgba(255,255,255,1); border: 1px solid rgba(0,0,0,0); padding: 30px 20px 10px 20px;">
