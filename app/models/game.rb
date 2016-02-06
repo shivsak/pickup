@@ -27,8 +27,12 @@ class Game < ActiveRecord::Base
       '/images/black_icons/baseball.png'
     elsif self.game_type.downcase == 'cycle'
       '/images/black_icons/cycle.png'
+    elsif self.game_type.downcase == 'yoga'
+      '/images/black_icons/yoga.png'
+    elsif self.game_type.downcase == 'beer pong'
+      '/images/black_icons/beer.png'
     else
-      '/images/black_icons/man271.png'
+
     end
   end
 
@@ -54,8 +58,10 @@ class Game < ActiveRecord::Base
         '/images/white_icons/baseball.png'
       elsif self.game_type.downcase == 'cycle'
         '/images/white_icons/cycle.png'
-      else
-        '/images/white_icons/soccer.png'
+      elsif self.game_type.downcase == 'yoga'
+        '/images/white_icons/yoga.png'
+      elsif self.game_type.downcase == 'beer pong'
+        '/images/white_icons/beer.png'
       end
   end
 

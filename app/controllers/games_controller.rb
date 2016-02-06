@@ -69,6 +69,13 @@ class GamesController < ApplicationController
     redirect_to :back
   end
 
+  def remove_person
+    game = Game.find(params[:id])
+    game_person_relation = Gameperson.where(person_id: params['personid'], game: game.id)
+    game_person_relation.first.delete
+    redirect_to :back
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game

@@ -12,7 +12,178 @@
 
 </head>
 <body>
-<section class="bg-cover" style="color:white; height: 150%;">
+
+<% if !params[:game_id].blank? %>
+  <% @game = Game.find(params[:game_id]) %>
+  <div class="ui modal" id="game-modal" style="overflow: scroll;">
+    <br />
+      <div class="header" id="modal-header">
+        <center>
+        <h2 class="ui horizontal divider header" style="display:inline-block; padding-bottom:5px;">
+            <img src="<%= @game.get_black_icon %>" width="40px" class="ui small" />
+            <%= @game.title.titleize %>
+        </h2>
+        </center>
+        <br />
+        <div class="content">
+          <center>
+            <div class="ui buttons small">
+            <% if person_signed_in? %>
+              <% in_game = false %>
+              <% @game.people.each do |person| %>
+                <% if person.email == current_person.email %>
+                  <% in_game = true %>
+                <% end %>
+              <% end %>
+            <% end %>
+
+            <button class="ui blue button">
+              <i class="arrow left icon"></i>
+              <%= link_to 'back', games_path, class: 'white-text' %></button>
+            <div class="or" data-text=""></div>
+            <% if !in_game %>
+              <%= link_to add_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button orange mini' do %>
+                  <i class="add icon"></i> join
+              <% end %>
+            <% else %>
+              <%= link_to remove_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button red mini' do %>
+                  <i class="remove icon"></i> leave
+              <% end %>
+            <% end %>
+            <div class="or" data-text=""></div>
+            <button class="ui teal button">
+              <i class="write icon"></i>
+              <%= link_to 'edit', edit_game_path(@game), class: 'white-text' %></button>
+            </div>
+          </center>
+        </div>
+      </div>
+
+      <div class="content" style="display:inline-block;">
+        <center>
+        <h3 class="ui horizontal divider header" style="display:inline-block; padding-bottom:5px;">
+            <i class="calendar icon"></i>
+            <%= @game.date.strftime("%A %b %e").titleize %> |
+            <%= @game.date.strftime("%l:%M %P") %>
+        </h3>
+        </center>
+        <center>
+          <h5 style="color: rgba(0,0,0,0.5); display:inline-block; margin-top: -15px"><i class="cloud icon" id="weather-icon"></i>
+            <span id="weather"> no forecast yet</span></h5>
+        </center>
+      </div>
+
+      <% if !@game.venue.blank? %>
+      <div class="content">
+        <h4 class="ui horizontal divider header green">
+            <i class="marker icon"></i>
+            <%= @game.venue.titleize %>
+        </h4>
+        <center>
+          <iframe style="margin:0 auto; background:none; box-shadow:none; width: 90%; height: 100%; border-radius: 5px; padding: 0px; border: none;"
+          src="https://www.google.com/maps/embed/v1/place?q=<%=u @game.venue %>
+            &zoom=17
+            &key=AIzaSyDu9jdCmLG8bGpHEKVviraQ0qPoe1PN0f4">
+          </iframe>
+        </center>
+      </div>
+      <% end %>
+
+      <% if !@game.max_participants.blank? %>
+      <div class="content">
+        <h4 class="ui horizontal divider header">
+            <i class="users outline icon"></i>
+            <%= @game.get_participants.count %>/<%= @game.max_participants %> playing
+        </h4>
+          <% @game.get_participants.each do |person| %>
+          <div class="ui horizontal list">
+            <a class="item ui image label" style="margin: 10px 4px; padding: 5px 10px">
+              &nbsp; &nbsp;
+              <i class="user icon"></i>
+              <%= person.name %>
+            </a>
+          </div>
+          <% end %>
+      </div>
+      <% end %>
+
+      <% if !@game.max_participants.blank? %>
+      <div class="content">
+        <h4 class="ui horizontal divider header">
+            <i class="info circle icon"></i>
+            more info
+        </h4>
+        <span><center> <%= @game.description %> </center></span>
+      </div>
+      <% end %>
+
+      <% if !@game.max_participants.blank? %>
+      <div class="content">
+        <h4 class="ui horizontal divider header">
+            <i class="comment icon"></i>
+            2 comments
+        </h4>
+        <div class="ui feed">
+          <div class="event" style="margin: 5px;">
+            <div class="ui circular button teal tiny">
+              <% if @game.get_participants.count > 0 %>
+                <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+              <% else %>
+                SS
+              <% end %>
+            </div> &nbsp; &nbsp; &nbsp;
+            <div class="content">
+              <% if @game.get_participants.count > 0 %>
+                <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
+              <% else %>
+                <span class="ui header small">Shiv Sakhuja</span> &nbsp;
+              <% end %>
+                <span class="date">
+                  1 day ago
+                </span>
+                <div class="summary" style="font-weight: 300;">
+                   I'd be happy to bring some food!
+                </div>
+            </div>
+          </div>
+
+          <div class="event" style="margin: 5px;">
+            <div class="ui circular button teal tiny">
+              <% if @game.get_participants.count > 0 %>
+                <%= @game.get_participants.last.first_name[0] %><%= @game.get_participants.last.last_name[0] %>
+              <% else %>
+                NA
+              <% end %>
+            </div> &nbsp; &nbsp; &nbsp;
+            <div class="content">
+              <% if @game.get_participants.count > 0 %>
+                <span class="ui header small"><%= @game.get_participants.last.first_name %></span> &nbsp;
+              <% else %>
+                <span class="ui header small">Naman Agrawal</span> &nbsp;
+              <% end %>
+                <span class="date">
+                  3 days ago
+                </span>
+                <div class="summary" style="font-weight: 300;">
+                   I'mma let you finish, but I might be running a little late.
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+
+      <div class="content">
+        <div class="ui transparent icon input">
+          <input type="text" placeholder="Leave a comment here...">
+        </div>
+      </div>
+  </div>
+<% end %>
+
+
+
+<section class="bg-cover" style="color:white; height: 350%;">
   <div id="navbar" style="background:rgba(250,200,100,0); padding: 10px;">
 
     <h1 class="header" style="font-size:30pt;"><i class="angle double up icon"></i>PlayUp </h1>
@@ -97,14 +268,14 @@
         <div class="ui three stackable link cards">
           <% @games.each do |game| %>
             <!-- One card per game -->
-            <a href="/games/<%= game.id %>">
+            <%= link_to request.parameters.merge({"game_id" => "#{game.id}"}) do %>
               <div class="ui card" style="box-shadow: none;">
                 <!-- Content -->
                 <div class="image-bg-<%=(game.id.to_i%7).to_s%>" style="padding: 20px; background: rgba(40, 50, 70, 1)">
                     <center><img src="<%= game.get_white_icon %>" width="100px"/></center>
                 </div>
                 <div class="content">
-                  <%= link_to game do %>
+                  <%= link_to do %>
                     <div class="header">
                         <h3 style="color:black"><%= game.title %></h3>
                     </div>
@@ -158,7 +329,7 @@
                 <% end %>
 
               </div>
-            </a>
+            <% end %>
 
             <!-- End Loop-->
 
@@ -169,5 +340,74 @@
   </div>
   <br>
 </section>
+<script>
+  $('.ui.dropdown')
+  .dropdown()
+  ;
+</script>
+<script>
+  <% if !params[:game_id].blank? %>
+      $('.ui.modal')
+        .modal('show')
+      ;
+  <% end %>
+</script>
+
+<script>
+  var myDiv = document.getElementById('game-modal');
+  myDiv.scrollTop = 0;
+</script>
+
+<script>
+  $(document).ready(function() {
+    document.getElementById("modal-header").scrollTop = 0; //It scrolls to top
+  });
+</script>
+
+<% if !params[:game_id].blank? %>
+  <% @game = Game.find(params[:game_id]) %>
+    <%if @game.date.strftime("%-m").to_i == Time.now.strftime("%-m").to_i %>
+      <% if @game.date.strftime("%e").to_i <= Time.now.strftime("%e").to_i + 4 %>
+        <script>
+          var callbackFunction = function(data) {
+            var forecasts = data.query.results.channel.item.forecast;
+            var diff = 0;
+            diff = <%= (@game.date.strftime("%e").to_i) - (Time.now.strftime("%e").to_i) %>;
+
+            <%if @game.date.strftime("%P") == "pm" %>
+            document.getElementById("weather").innerHTML = forecasts[diff].text + " / " + forecasts[diff].high + "&deg;";
+            <% end %>
+
+            <%if @game.date.strftime("%P") == "am" %>
+            document.getElementById("weather").innerHTML = forecasts[diff].text + " / " + forecasts[diff].low + "&deg;";
+            <% end %>
+
+            if(forecasts[diff].text.toLowerCase().indexOf("sun") != -1) {
+              document.getElementById("weather-icon").className = "sun icon";
+            }
+
+            if(forecasts[diff].text.toLowerCase().indexOf("cloud") != -1) {
+              document.getElementById("weather-icon").className = "cloud icon";
+            }
+
+            if(forecasts[diff].text.toLowerCase().indexOf("rain") != -1) {
+              document.getElementById("weather-icon").className = "rain icon";
+            }
+
+            if(forecasts[diff].text.toLowerCase().indexOf("storm") != -1) {
+              document.getElementById("weather-icon").className = "lightning icon";
+            }
+
+            if(forecasts[diff].text.toLowerCase().indexOf("snow") != -1) {
+              document.getElementById("weather-icon").className = "bullseye icon";
+            }
+          };
+        </script>
+        <script src="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D%0912761358&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=callbackFunction"></script>
+      <% end %>
+    <% end %>
+<% end %>
+
+
 </body>
 </html>

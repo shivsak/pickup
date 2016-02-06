@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :games do
     member do
       post 'add_person'
+      post 'remove_person'
     end
   end
 

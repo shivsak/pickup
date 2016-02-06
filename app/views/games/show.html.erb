@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; padding-bottom: none; margin: 0 auto; background: rgba(20, 30, 70, 1)">
+  <div class="image-bg-<%=(@game.id.to_i%7).to_s%>" style="padding: 20px; padding-bottom: none; margin: 0 auto; background: rgba(20, 30, 50, 1);">
       <center><img src="<%= @game.get_white_icon %>" width="100px"/></center><br><br>
 
       <center>
@@ -35,7 +35,7 @@
               <i class="add icon"></i> join
           <% end %>
         <% else %>
-          <%= link_to add_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button red mini' do %>
+          <%= link_to remove_person_game_path(@game.id, personid: current_person.id), method: :post, class: 'ui button red mini' do %>
               <i class="remove icon"></i> leave
           <% end %>
         <% end %>
@@ -89,24 +89,23 @@
           <i class="users outline icon"></i>
           <%= @game.get_participants.count %>/<%= @game.max_participants %> playing
       </h4>
-      <center>
         <% @game.get_participants.each do |person| %>
           <a class="ui image label" style="margin: 10px 4px;">
             <i class="user icon"></i>
             <%= person.name %>
           </a>
         <% end %>
-      </center>
+
     </div>
     <% end %>
 
-    <% if !@game.max_participants.blank? %>
+    <% if !@game.description.blank? %>
     <div class="content">
       <h4 class="ui horizontal divider header">
           <i class="info circle icon"></i>
           more info
       </h4>
-      <span><center> bring 2 balls, 2 nets. meet on 113th side of park </center></span>
+      <span><center> <% @game.description %> </center></span>
     </div>
     <% end %>
 
@@ -119,31 +118,47 @@
       <div class="ui feed">
         <div class="event" style="margin: 5px;">
           <div class="ui circular button teal tiny">
-            <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+            <% if @game.get_participants.count > 0 %>
+              <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+            <% else %>
+              SS
+            <% end %>
           </div> &nbsp; &nbsp; &nbsp;
           <div class="content">
-            <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
-            <span class="date">
-              1 day ago
-            </span>
-            <div class="summary" style="font-weight: 300;">
-               I'd be happy to bring a soccer ball!
-            </div>
+            <% if @game.get_participants.count > 0 %>
+              <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
+            <% else %>
+              <span class="ui header small">Shiv Sakhuja</span> &nbsp;
+            <% end %>
+              <span class="date">
+                1 day ago
+              </span>
+              <div class="summary" style="font-weight: 300;">
+                 I'd be happy to bring some food!
+              </div>
           </div>
         </div>
 
         <div class="event" style="margin: 5px;">
           <div class="ui circular button teal tiny">
-            <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+            <% if @game.get_participants.count > 0 %>
+              <%= @game.get_participants.first.first_name[0] %><%= @game.get_participants.first.last_name[0] %>
+            <% else %>
+              NA
+            <% end %>
           </div> &nbsp; &nbsp; &nbsp;
           <div class="content">
-            <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
-            <span class="date">
-              3 days ago
-            </span>
-            <div class="summary" style="font-weight: 300;">
-               Might be running a little late, but I have a net.
-            </div>
+            <% if @game.get_participants.count > 0 %>
+              <span class="ui header small"><%= @game.get_participants.first.first_name %></span> &nbsp;
+            <% else %>
+              <span class="ui header small">Naman Agrawal</span> &nbsp;
+            <% end %>
+              <span class="date">
+                3 days ago
+              </span>
+              <div class="summary" style="font-weight: 300;">
+                 Might be running a little late.
+              </div>
           </div>
         </div>
       </div>
